@@ -20,7 +20,7 @@ struct Block {
         hash = calculateHash();
     }
 
-    string calculateHash() const {
+    string calculateHash()  {
         stringstream ss;
         ss << index << data << previousHash << timestamp;
         return hashFunction(ss.str());
@@ -56,7 +56,7 @@ public:
         tail = newBlock;
     }
 
-    bool isChainValid() const {
+    bool isChainValid()  {
         Block* current = head->next;
         Block* previous = head;
 
@@ -74,7 +74,7 @@ public:
         return true;
     }
 
-    void printChain() const {
+    void printChain()  {
         Block* current = head;
         while (current) {
             char buffer[26];
@@ -127,7 +127,7 @@ public:
 
     }
 
-    void searchBlockByData(const string& query) const {
+    void searchBlockByData(const string& query)  {
         Block* current = head;
         bool found = false;
         while (current) {
@@ -142,7 +142,7 @@ public:
                     << "Hash: " << current->hash << "\n"
                     << "Timestamp: " << buffer << "\n";
                 found = true;
-                break;
+                
             }
             current = current->next;
         }
