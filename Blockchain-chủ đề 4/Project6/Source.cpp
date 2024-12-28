@@ -150,6 +150,37 @@ public:
             cout << "No block found with the data: " << query << "\n";
         }
     }
+    void fixConflicts() {
+        Block* current = head->next;
+        Block* previous = head;
+
+        while (current) {
+            if (current->previousHash != previous->hash) {
+                cout << "Conflict detected at block " << current->index << ". Fixing...\n";
+                current->previousHash = previous->hash;
+                current->hash = current->calculateHash();
+                cout << "Block " << current->index << " has been updated.\n";
+            }
+            previous = current;
+            current = current->next;
+        }
+    }
+    void deleteBlockByIndex(int index) {
+        Block* current = head;
+        while (current->next && current->next->index != index) {
+            current = current->next;
+        }
+
+        if (current->next) {
+            Block* temp = current->next;
+            current->next = current->next->next;
+            delete temp;
+            cout << "Block with index " << index << " deleted.\n";
+        }
+        else {
+            cout << "No block found with index " << index << "\n";
+        }
+    }
 };
 
 int main() {
@@ -163,7 +194,9 @@ int main() {
         cout << "3. Verify blockchain integrity\n";
         cout << "4. Analyze the blockchain\n";
         cout << "5. Search for a block by data\n";
-        cout << "6. Exit\n";
+        cout << "6. Fixing conflict\n";
+        cout << "7. Delete by index(for test)\n";
+        cout << "8. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
         cin.ignore();
@@ -188,13 +221,24 @@ int main() {
             blockchain.searchBlockByData(query);
             break;
         }
-        case 6:
+        case 6: {
+            blockchain.fixConflicts();
+            cout << "Problem fixed\n";
+            break;
+        }
+        case 7:
+            int index;
+            cout << "Choosing block by index to remove: ";
+            cin >> index;
+            blockchain.deleteBlockByIndex(index);
+            break;
+        case 8:
             cout << "Exiting...\n";
             break;
         default:
             cout << "Invalid choice. Please try again.\n";
         }
-    } while (choice != 6);
+    } while (choice != 8);
 
     return 0;
 }
